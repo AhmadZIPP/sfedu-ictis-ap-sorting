@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <chrono>
-#include<stdlib.h>
+#include <stdlib.h>
 #include "test.h"
 
 using namespace std;
