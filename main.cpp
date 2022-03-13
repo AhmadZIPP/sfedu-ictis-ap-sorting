@@ -56,7 +56,7 @@ void swap(int *a1, int *a2) {
     *a1 = *a2;
     *a2 = tmp;
 }
-
+//TODO implement method to generate Test Array
 int *generateTestArray(int size) {
     int *ar = new int[size];
     for (int i = 0; i < size; i++)
@@ -65,21 +65,21 @@ int *generateTestArray(int size) {
     }
     return ar;
 }
-
+//TODO implement a function to cleanup file before saving data there.
 void cleanupFile(const char *fileName) {
     ofstream ZIP;
     ZIP.open(fileName);
     ZIP.clear();
     ZIP.close();
 }
-
+//TODO add timing about alg execution time to corresponding file based on fileName
 void saveExecutionTimeToFile(const char *fileName, int arrSize, unsigned long timeMS) {
     ofstream ZIP;
     ZIP.open(fileName, ios::app);
     ZIP << arrSize << ", " << timeMS << endl;
     ZIP.close();
 }
-
+//TODO implement Bubble Sort alg based on https://en.wikipedia.org/wiki/Bubble_sort
 void bubbleSort(int *arr, int size) {
     for (int i = 0; i < size; i++)
     {
@@ -92,7 +92,7 @@ void bubbleSort(int *arr, int size) {
         }
     }
 }
-
+//TODO implement Insertion sort alg based on https://en.wikipedia.org/wiki/Insertion_sort
 void insertionSort(int *arr, int size){
     int i, j, ZIPP;
     for (i = 1; i < size; i++)
@@ -116,7 +116,7 @@ namespace SelectionSortNS {
     int *min(int *arr, int from, int to);
 
     void sort(int *arr, int size);
-
+//TODO Implement function to find address of the minimum element of the array in the range [from, to]
     int *min(int *arr, int from, int to) {
         int *minimar = &arr[from];
         for (int i = from + 1; i < to; i++) {
@@ -126,7 +126,7 @@ namespace SelectionSortNS {
         }
         return minimar;
     }
-
+//TODO implement Selection sorting algorithm based on https://en.wikipedia.org/wiki/Selection_sort
     void sort(int *arr, int size) {
         for (int i = 0; i < size; i++) {
             swap(&arr[i], min(arr, i, size));
@@ -140,7 +140,7 @@ namespace SelectionSortNS {
 namespace QuickSortNS {
     int partitioning(int *arr, int lo, int hi);
     void quicksort(int *arr, int low, int high);
-
+//TODO Implement function to partition the array based on https://en.wikipedia.org/wiki/Quicksort
     int partitioning(int *arr, int lo, int hi) {
         int a = arr[hi];
         int b = lo - 1;
