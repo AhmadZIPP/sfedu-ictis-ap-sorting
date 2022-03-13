@@ -1,8 +1,9 @@
 #include <iostream>
+#include <stdio.h>
 #include <fstream>
 #include <chrono>
-#include <stdlib.h>
 #include "test.h"
+#include <stdlib.h>
 
 using namespace std;
 using namespace std::chrono;
@@ -10,21 +11,37 @@ using namespace std::chrono;
 //utilities algorithms
 void performanceTestExecutor(const char *algName, void(*sortAlg)(int *arr, int size), const int *seriesSize,
                              int numOfSeries);
+
 void saveExecutionTimeToFile(const char *fileName, int arrSize, unsigned long timeMS);
+
 void cleanupFile(const char *fileName);
+
 int *newArrayFromTemplate(const int *arr, int size);
+
 int testResult(const int *expected, const int *current, int size);
+
+void *printArray(const int *arr, int size);
+
 void swap(int *a1, int *a2);
+
 int *generateTestArray(int size);
+
+void saveToFile(int arrSize, long timeMS);
 
 // Function to perform a test
 int performTest(int testData[], int expectedData[], int testDataSize, const char *algName,
                 void(*sortAlg)(int *arr, int size));
 
+// Function to perform a test
+int performanceTest(const char *algName, void(*sortAlg)(int *arr, int size));
+
 //Sorting algorithms
 void quickSort(int *arr, int size);
+
 void selectionSort(int *arr, int size);
+
 void insertionSort(int *arr, int size);
+
 void bubbleSort(int *arr, int size);
 
 
@@ -44,6 +61,14 @@ int *newArrayFromTemplate(const int *arr, const int size) {
     return newArr;
 }
 
+void *printArray(const int *arr, const int size) {
+    for (int i = 0; i < size; i++) {
+        cout << arr[i] << ",";
+    }
+    cout << endl;
+    return nullptr;
+}
+
 void deleteArr(const int *arr) {
     delete[] arr;
 }
@@ -56,58 +81,55 @@ void swap(int *a1, int *a2) {
     *a1 = *a2;
     *a2 = tmp;
 }
+
+
 //TODO implement method to generate Test Array
 int *generateTestArray(int size) {
-    int *ar = new int[size];
-    for (int i = 0; i < size; i++)
-    {
-        ar[i] = rand() % size;
-    }
-    return ar;
-}
-//TODO implement a function to cleanup file before saving data there.
-void cleanupFile(const char *fileName) {
-    ofstream ZIP;
-    ZIP.open(fileName);
-    ZIP.clear();
-    ZIP.close();
-}
-//TODO add timing about alg execution time to corresponding file based on fileName
-void saveExecutionTimeToFile(const char *fileName, int arrSize, unsigned long timeMS) {
-    ofstream ZIP;
-    ZIP.open(fileName, ios::app);
-    ZIP << arrSize << ", " << timeMS << endl;
-    ZIP.close();
-}
-//TODO implement Bubble Sort alg based on https://en.wikipedia.org/wiki/Bubble_sort
-void bubbleSort(int *arr, int size) {
-    for (int i = 0; i < size; i++)
-    {
-        for (int j = 0; j < size - i - 1; j++)
-        {
-            if (arr[j] > arr[j + 1])
-            {
-                swap(&arr[j], &arr[j + 1]);
-            }
-        }
-    }
-}
-//TODO implement Insertion sort alg based on https://en.wikipedia.org/wiki/Insertion_sort
-void insertionSort(int *arr, int size){
-    int i, j, ZIPP;
-    for (i = 1; i < size; i++)
-    {
-        ZIPP = arr[i];
-        j = i - 1;
-        while (j >= 0 && arr[j] > ZIPP)
-        {
-            arr[j + 1] = arr[j];
-            j--;
-        }
-        arr[j + 1] = ZIPP;
-    }
+    int *ZIP , *ZIPP ;
+    ZIP = ZIPP = ( int* )malloc( sizeof( int ) * size ) ;
+
+    srand( time( 0 ) ) ;
+
+    for( ; ZIP != ZIPP + size ; ++ZIP )
+        *ZIP = rand( ) % 10240 ;
+
+    return ZIPP ;
 }
 
+//TODO implement a function to cleanup file before saving data there.
+void cleanupFile(const char *fileName) {
+    std::ofstream cd( fileName ) ;
+    cd.flush( ) ;
+    cd.close( ) ;
+
+    return ;
+}
+
+//TODO add timing about alg execution time to corresponding file based on fileName
+void saveExecutionTimeToFile(const char *fileName, int arraySize, unsigned long time) {
+    std::ofstream fout( fileName , ios_base::app ) ;
+    fout << arraySize << ',' << time << '\n' ;
+    fout.close( ) ;
+}
+
+//TODO implement Bubble Sort alg based on https://en.wikipedia.org/wiki/Bubble_sort
+void bubbleSort(int *arr, int size) {
+    int	i, j;
+
+    for( i = 0 ; i < size ; ++i )
+        for( j = i + 1 ; j < size ; ++j )
+            if( arr[ i ] > arr[ j ] )
+                swap( &arr[ i ] , &arr[ j ] ) ;
+}
+
+//TODO implement Insertion sort alg based on https://en.wikipedia.org/wiki/Insertion_sort
+void insertionSort(int *arr, int size) {
+    int	i	,
+            j	;
+    for( i = 1 ; i < size ; ++i )
+        for( j = i ; j > 0 && arr[ j - 1 ] > arr[ j ] ; --j )
+            swap( &arr[ j - 1 ] , &arr[ j ] ) ;
+}
 
 /**
  * Implementation of Selection Sort
@@ -116,52 +138,62 @@ namespace SelectionSortNS {
     int *min(int *arr, int from, int to);
 
     void sort(int *arr, int size);
-//TODO Implement function to find address of the minimum element of the array in the range [from, to]
-    int *min(int *arr, int from, int to) {
-        int *minimar = &arr[from];
-        for (int i = from + 1; i < to; i++) {
-            if (*minimar > arr[i]) {
-                minimar = &arr[i];
-            }
-        }
-        return minimar;
-    }
-//TODO implement Selection sorting algorithm based on https://en.wikipedia.org/wiki/Selection_sort
-    void sort(int *arr, int size) {
-        for (int i = 0; i < size; i++) {
-            swap(&arr[i], min(arr, i, size));
-        }
 
+    //TODO Implement function to find address of the minimum element of the array in the range [from, to]
+    int *min(int *arr, int from, int to) {
+        int min ;
+        for( min = from++ ; from < to ; ++from )
+            if( arr[ min ] > arr[ from ] )
+                min = from ;
+
+        return &arr[ min ] ;
     }
+
+    //TODO implement Selection sorting algorithm based on https://en.wikipedia.org/wiki/Selection_sort
+    void sort(int *arr, int size) {
+        int	i	;
+        for( i = 0 ; i < size ; ++i )
+            swap( &arr[ i ] , min( arr , i , size ) ) ;
+    }
+
 }
+
 /**
  * Implementation of QuickSort
  */
 namespace QuickSortNS {
     int partitioning(int *arr, int lo, int hi);
+
     void quicksort(int *arr, int low, int high);
-//TODO Implement function to partition the array based on https://en.wikipedia.org/wiki/Quicksort
+
+    //TODO Implement function to partition the array based on https://en.wikipedia.org/wiki/Quicksort
     int partitioning(int *arr, int lo, int hi) {
-        int a = arr[hi];
-        int b = lo - 1;
-        for (int j = lo; j < hi; j++)
-        {
-            if (arr[j] < a)
+        int	lower ,pivot;
+
+        for( lower = lo , pivot = hi ; lower < pivot ; )
+            if( arr[ lower ] < arr[ pivot ] )
+                ++lower ;
+            else
             {
-                swap(&arr[j], &arr[++b]);
+                swap( &arr[ pivot ] , &arr[ pivot - 1 ] ) ;
+                if( pivot - 1 != lower )
+                    swap( &arr[ pivot ] , &arr[ lower ] ) ;
+                --pivot ;
             }
-        }
-        swap(&arr[b + 1], &arr[hi]);
-        return b + 1;
+
+        return pivot ;
     }
 
-    void quicksort(int *arr, int low, int high)
-    {
-        if (low < high) {
-            int p = partitioning(arr, low, high);
-            quicksort(arr, low, p - 1);
-            quicksort(arr, p + 1, high);
-        }
+    void quicksort(int *arr, int low, int high) {
+        int pivot ;
+
+        if( high - low < 1 )
+            return ;
+
+        pivot = partitioning( arr , low , high ) ;
+
+        quicksort( arr , low , pivot - 1 ) ;
+        quicksort( arr , pivot + 1 , high ) ;
     }
 }
 
@@ -195,11 +227,11 @@ void performanceTestExecutor(const char *algName, void(*sortAlg)(int *arr, int s
     cleanupFile(algName);
     for (int i = 0; i < numOfSeries; i++) {
         int sizeOfArray = seriesSize[i];
-        time_point<steady_clock> start = high_resolution_clock::now();
         int *arr = generateTestArray(sizeOfArray);
+        time_point<steady_clock> start = high_resolution_clock::now();
         sortAlg(arr, sizeOfArray);
-        deleteArr(arr);
         time_point<steady_clock> stop = high_resolution_clock::now();
+        deleteArr(arr);
         auto duration = duration_cast<milliseconds>(stop - start);
         saveExecutionTimeToFile(algName, sizeOfArray, duration.count());
     }
@@ -207,12 +239,12 @@ void performanceTestExecutor(const char *algName, void(*sortAlg)(int *arr, int s
 
 int main() {
 
-
     int result = 0;
     result += performTest(TEST_ARRAY, CHECK_ARRAY, TEST_ARRAY_SIZE, "Bubble", bubbleSort);
     result += performTest(TEST_ARRAY, CHECK_ARRAY, TEST_ARRAY_SIZE, "Insertion", insertionSort);
     result += performTest(TEST_ARRAY, CHECK_ARRAY, TEST_ARRAY_SIZE, "Selection", selectionSort);
     result += performTest(TEST_ARRAY, CHECK_ARRAY, TEST_ARRAY_SIZE, "Quick", quickSort);
+
     if (result > 0) {
         return result;
     }
